@@ -3,6 +3,15 @@ import numpy.random as npr
 import sounddevice as sd
 import operator
 import functools
+import argparse
+
+FREQ = 44100
+NUM_SECS = 10
+MIN_VAL = 0
+MAX_VAL = 128
+PROBLEM_CARD = 7
+LINSPACE_SCALE = int(1e2)
+VOL_ADJ = 1e2
 
 def prod(iterable):
     return functools.reduce(operator.mul, iterable, 1)
@@ -10,14 +19,9 @@ def prod(iterable):
 def scaled_cos(scale, inp):
     return np.cos(scale * inp)
 
-# var1 = maxval of randint
-# var2 = number of ints genned
-problem = list(npr.randint(0, 512, 9))
+problem = list(npr.randint(MIN_VAL, MAX_VAL, PROBLEM_CARD))
 
-fs = 44100
-secs = 50
-# var3 = linspace
-inp = np.linspace(0, 1e2, fs * secs)
+inp = np.linspace(0, LINSPACE_SCALE, FREQ * NUM_SECS)
 curr_res = prod(scaled_cos(member, inp) for member in problem)
-curr_res = curr_res * 1e2
-sd.play(curr_res, fs, blocking=True)
+curr_res = curr_res * VOL_ADJ
+sd.play(curr_res, FREQ, blocking=True)

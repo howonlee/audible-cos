@@ -19,9 +19,16 @@ def prod(iterable):
 def scaled_cos(scale, inp):
     return np.cos(scale * inp)
 
-problem = list(npr.randint(MIN_VAL, MAX_VAL, PROBLEM_CARD))
+def gen_problem(min_val, max_val, problem_card):
+    return list(npr.randint(min_val, max_val, problem_card))
 
-inp = np.linspace(0, LINSPACE_SCALE, FREQ * NUM_SECS)
-curr_res = prod(scaled_cos(member, inp) for member in problem)
-curr_res = curr_res * VOL_ADJ
+def gen_sound(problem, linspace_scale, freq, num_secs, vol_adj):
+    inp = np.linspace(0, linspace_scale, freq * num_secs)
+    curr_res = prod(scaled_cos(member, inp) for member in problem)
+    return curr_res * vol_adj
+
+if __name__ == "__main__":
+    pass
+
+
 sd.play(curr_res, FREQ, blocking=True)
